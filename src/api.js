@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3080";
+export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3080";
 
 export const fetchResponse = async (chat, model) => {
   try {
@@ -26,7 +26,7 @@ export const generateImage = async (prompt) => {
   // Direct client-side generation to avoid server restart requirement
   const encodedPrompt = encodeURIComponent(prompt);
   const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}`;
-  
+
   // Simulate an async operation to match previous interface
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -201,16 +201,16 @@ export const fetchStreamResponse = async (chat, model, systemInstruction, modelS
     // Always use structured format for better context handling
     const messagePayload = chat.map((msg) => {
       const parts = [];
-      
+
       if (msg.images && msg.images.length > 0) {
         msg.images.forEach((img) => {
           const [mimeType, base64Data] = img.data.split(',');
           // Extract mime type from data URL (e.g., "data:application/pdf;base64")
           const mime = mimeType.match(/:(.*?);/)?.[1];
-          
+
           // Default to image/jpeg if not found, but respect pdf/txt
           const finalMime = mime || 'image/jpeg';
-          
+
           parts.push({
             inlineData: {
               mimeType: finalMime,
@@ -223,10 +223,10 @@ export const fetchStreamResponse = async (chat, model, systemInstruction, modelS
       if (msg.message) {
         parts.push({ text: msg.message });
       }
-      
+
       return { role: msg.sender === "user" ? "user" : "model", parts };
     });
-    
+
     console.log('=== ОТПРАВКА НА СЕРВЕР ===');
     console.log('Model:', model);
     console.log('System Instruction:', systemInstruction || 'ПУСТО!!!');
@@ -289,7 +289,7 @@ export const generateChatTitle = async (chat, model) => {
   try {
     const firstMessage = chat.find(m => m.sender === 'user')?.message || "";
     if (!firstMessage) return "New Chat";
-    
+
     // Use a simple non-streaming call if possible, but we reuse the stream endpoint for simplicity
     // We just want the text.
     const response = await fetch(`${API_URL}/stream`, {
@@ -363,11 +363,11 @@ export const register = async (username, email, password) => {
     });
 
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Registration failed');
     }
-    
+
     return data;
   } catch (error) {
     console.error('Registration error:', error);
@@ -387,11 +387,11 @@ export const login = async (email, password) => {
     });
 
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Login failed');
     }
-    
+
     return data;
   } catch (error) {
     console.error('Login error:', error);
@@ -407,11 +407,11 @@ export const getCurrentUser = async () => {
     });
 
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Failed to get profile');
     }
-    
+
     return data;
   } catch (error) {
     console.error('Get profile error:', error);
@@ -429,11 +429,11 @@ export const updateProfile = async (updates) => {
     });
 
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Failed to update profile');
     }
-    
+
     return data;
   } catch (error) {
     console.error('Update profile error:', error);
@@ -448,20 +448,20 @@ export const updateProfile = async (updates) => {
 // Search users
 export const searchUsers = async (query = '') => {
   try {
-    const url = query 
+    const url = query
       ? `${API_URL}/api/users?search=${encodeURIComponent(query)}`
       : `${API_URL}/api/users`;
-      
+
     const response = await fetch(url, {
       headers: getAuthHeaders(),
     });
 
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Failed to search users');
     }
-    
+
     return data;
   } catch (error) {
     console.error('Search users error:', error);
@@ -477,11 +477,11 @@ export const getUserById = async (userId) => {
     });
 
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Failed to get user');
     }
-    
+
     return data;
   } catch (error) {
     console.error('Get user error:', error);
@@ -503,11 +503,11 @@ export const createRoom = async (name, description = '', memberIds = []) => {
     });
 
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Failed to create room');
     }
-    
+
     return data;
   } catch (error) {
     console.error('Create room error:', error);
@@ -523,11 +523,11 @@ export const getUserRooms = async () => {
     });
 
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Failed to get rooms');
     }
-    
+
     return data;
   } catch (error) {
     console.error('Get rooms error:', error);
@@ -543,11 +543,11 @@ export const getRoomDetails = async (roomId) => {
     });
 
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Failed to get room details');
     }
-    
+
     return data;
   } catch (error) {
     console.error('Get room details error:', error);
@@ -565,11 +565,11 @@ export const sendRoomMessage = async (roomId, message) => {
     });
 
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Failed to send message');
     }
-    
+
     return data;
   } catch (error) {
     console.error('Send message error:', error);
@@ -587,11 +587,11 @@ export const addRoomMember = async (roomId, userId) => {
     });
 
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Failed to add member');
     }
-    
+
     return data;
   } catch (error) {
     console.error('Add member error:', error);
@@ -608,11 +608,11 @@ export const removeRoomMember = async (roomId, userId) => {
     });
 
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Failed to remove member');
     }
-    
+
     return data;
   } catch (error) {
     console.error('Remove member error:', error);
@@ -630,11 +630,11 @@ export const updateRoom = async (roomId, updates) => {
     });
 
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Failed to update room');
     }
-    
+
     return data;
   } catch (error) {
     console.error('Update room error:', error);
@@ -651,11 +651,11 @@ export const deleteRoom = async (roomId) => {
     });
 
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Failed to delete room');
     }
-    
+
     return data;
   } catch (error) {
     console.error('Delete room error:', error);

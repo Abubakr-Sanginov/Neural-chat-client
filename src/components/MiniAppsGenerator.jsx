@@ -13,6 +13,8 @@ import {
   Wand2,
 } from "lucide-react";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3080";
+
 const PRESET_APPS = [
   {
     id: "json-cleaner",
@@ -78,7 +80,7 @@ export default function MiniAppsGenerator({ isOpen, onClose }) {
 
     try {
       // Call AI to generate app code
-      const response = await fetch("http://localhost:3080/stream", {
+      const response = await fetch(`${API_URL}/stream`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -108,7 +110,7 @@ export default function MiniAppsGenerator({ isOpen, onClose }) {
             try {
               const parsed = JSON.parse(data);
               if (parsed.chunk) generatedCode += parsed.chunk;
-            } catch (e) {}
+            } catch (e) { }
           }
         }
       }
@@ -199,11 +201,10 @@ export default function MiniAppsGenerator({ isOpen, onClose }) {
                   <div
                     key={app.id}
                     onClick={() => setActiveApp(app)}
-                    className={`p-3 rounded-lg cursor-pointer transition-all ${
-                      activeApp?.id === app.id
-                        ? "bg-purple-600/20 border border-purple-500"
-                        : "bg-gray-800/50 hover:bg-gray-800"
-                    }`}
+                    className={`p-3 rounded-lg cursor-pointer transition-all ${activeApp?.id === app.id
+                      ? "bg-purple-600/20 border border-purple-500"
+                      : "bg-gray-800/50 hover:bg-gray-800"
+                      }`}
                   >
                     <div className="flex items-center gap-2">
                       <span className="text-xl">{app.icon}</span>

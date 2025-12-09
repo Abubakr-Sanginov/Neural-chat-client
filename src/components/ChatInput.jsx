@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { Send, Loader2, Image as ImageIcon, X, Video, FileText, Globe } from "lucide-react";
 import VoiceRecorder from "./VoiceRecorder";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3080";
+
 const COMMANDS = [
   { cmd: '/image', desc: 'Generate an image', example: '/image a cute cat' },
   { cmd: '!image', desc: 'Generate an image (alt)', example: '!image sunset' },
@@ -39,19 +41,19 @@ const ChatInput = ({ sendMessage, loading, chatId, draftMessage, onDraftChange }
     const filePromises = validFiles.map((file) => {
       return new Promise(async (resolve) => {
         // Handle documents (PDF, DOCX, TXT)
-        if (file.type === 'application/pdf' || 
-            file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 
-            file.type === 'text/plain') {
-          
+        if (file.type === 'application/pdf' ||
+          file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+          file.type === 'text/plain') {
+
           const formData = new FormData();
           formData.append('file', file);
 
           try {
-            const response = await fetch('http://localhost:3080/api/files/process-file', {
+            const response = await fetch(`${API_URL}/api/files/process-file`, {
               method: 'POST',
               body: formData,
             });
-            
+
             if (response.ok) {
               const { text } = await response.json();
               // Append extracted text to the message input
@@ -62,7 +64,7 @@ const ChatInput = ({ sendMessage, loading, chatId, draftMessage, onDraftChange }
               // We don't add documents to attachments list for visual preview as images, 
               // but we could add a "file processed" indicator if we wanted.
               // For now, let's just resolve with null to filter it out of image attachments
-              resolve(null); 
+              resolve(null);
               return;
             }
           } catch (error) {
@@ -135,7 +137,7 @@ const ChatInput = ({ sendMessage, loading, chatId, draftMessage, onDraftChange }
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current;
     if (!textarea) return;
-    
+
     // Reset height to auto to get the correct scrollHeight
     textarea.style.height = 'auto';
     // Set new height (min 40px, max 160px)
@@ -151,15 +153,15 @@ const ChatInput = ({ sendMessage, loading, chatId, draftMessage, onDraftChange }
   const handleInputChange = (e) => {
     const newValue = e.target.value;
     setValue(newValue);
-    
+
     // Save draft
     if (onDraftChange) {
       onDraftChange(newValue);
     }
-    
+
     // Check if user is typing a command
     if (newValue.startsWith('/') || newValue.startsWith('!')) {
-      const filtered = COMMANDS.filter(cmd => 
+      const filtered = COMMANDS.filter(cmd =>
         cmd.cmd.toLowerCase().startsWith(newValue.toLowerCase())
       );
       setFilteredCommands(filtered);
@@ -211,7 +213,7 @@ const ChatInput = ({ sendMessage, loading, chatId, draftMessage, onDraftChange }
     if (onDraftChange) {
       onDraftChange(newText);
     }
-    
+
     // Restore cursor position
     setTimeout(() => {
       textarea.focus();
@@ -295,10 +297,10 @@ const ChatInput = ({ sendMessage, loading, chatId, draftMessage, onDraftChange }
                     />
                   ) : (
                     <div className="h-20 w-20 flex flex-col items-center justify-center bg-gray-800 rounded-lg border border-gray-600 p-2">
-                       <FileText size={24} className="text-gray-400 mb-1" />
-                       <span className="text-[10px] text-gray-300 truncate w-full text-center" title={file.name}>
-                         {file.name}
-                       </span>
+                      <FileText size={24} className="text-gray-400 mb-1" />
+                      <span className="text-[10px] text-gray-300 truncate w-full text-center" title={file.name}>
+                        {file.name}
+                      </span>
                     </div>
                   )}
                   <button
@@ -342,7 +344,7 @@ const ChatInput = ({ sendMessage, loading, chatId, draftMessage, onDraftChange }
             />
 
             <button
-              type= "button"
+              type="button"
               onClick={() => fileInputRef.current?.click()}
               className="p-2 sm:p-2.5 hover:bg-white hover:bg-opacity-10 rounded-lg transition-colors flex-shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center"
               title="Attach file"
@@ -352,11 +354,10 @@ const ChatInput = ({ sendMessage, loading, chatId, draftMessage, onDraftChange }
 
             <button
               onClick={() => setUseWebSearch(!useWebSearch)}
-              className={`p-2 sm:p-2.5 rounded-lg transition-colors flex-shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center ${
-                useWebSearch 
-                  ? 'bg-blue-600 hover:bg-blue-700' 
-                  : 'hover:bg-white hover:bg-opacity-10'
-              }`}
+              className={`p-2 sm:p-2.5 rounded-lg transition-colors flex-shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center ${useWebSearch
+                ? 'bg-blue-600 hover:bg-blue-700'
+                : 'hover:bg-white hover:bg-opacity-10'
+                }`}
               title={useWebSearch ? "Web search enabled" : "Enable web search"}
             >
               <Globe size={20} />

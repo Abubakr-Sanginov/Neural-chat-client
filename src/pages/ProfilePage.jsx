@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Mail, Calendar, Save, ArrowLeft, Camera, LogOut } from 'lucide-react';
-import { getAuthHeaders } from '../api';
+import { getAuthHeaders, API_URL } from '../api';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -20,12 +20,12 @@ export default function ProfilePage() {
 
   const fetchProfile = async () => {
     try {
-      const response = await fetch('http://localhost:3080/api/auth/me', {
+      const response = await fetch(`${API_URL}/api/auth/me`, {
         headers: getAuthHeaders()
       });
-      
+
       if (!response.ok) throw new Error('Failed to load profile');
-      
+
       const data = await response.json();
       setUser(data.user);
       setFormData({
@@ -43,9 +43,9 @@ export default function ProfilePage() {
     e.preventDefault();
     setError('');
     setSuccess('');
-    
+
     try {
-      const response = await fetch('http://localhost:3080/api/auth/profile', {
+      const response = await fetch(`${API_URL}/api/auth/profile`, {
         method: 'PUT',
         headers: {
           ...getAuthHeaders(),
@@ -53,13 +53,13 @@ export default function ProfilePage() {
         },
         body: JSON.stringify(formData)
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || 'Failed to update profile');
       }
-      
+
       setUser(data.user);
       setSuccess('Profile updated successfully!');
     } catch (err) {
@@ -86,7 +86,7 @@ export default function ProfilePage() {
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <button 
+          <button
             onClick={() => navigate('/')}
             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
           >
@@ -94,7 +94,7 @@ export default function ProfilePage() {
             Back to Chat
           </button>
           <h1 className="text-2xl font-bold">Profile Settings</h1>
-          <button 
+          <button
             onClick={handleLogout}
             className="flex items-center gap-2 text-red-400 hover:text-red-300 transition-colors"
           >
@@ -110,7 +110,7 @@ export default function ProfilePage() {
               {error}
             </div>
           )}
-          
+
           {success && (
             <div className="mb-6 p-4 bg-green-500/10 border border-green-500/50 rounded-lg text-green-200 text-sm">
               {success}
@@ -145,7 +145,7 @@ export default function ProfilePage() {
                 <input
                   type="text"
                   value={formData.username}
-                  onChange={(e) => setFormData({...formData, username: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                   className="w-full bg-[#1A232E] border border-gray-700 rounded-lg py-3 pl-10 pr-4 text-white focus:outline-none focus:border-blue-500 transition-colors"
                   placeholder="Enter username"
                 />
