@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Eudoxus Sans", sans-serif;
+  scroll-behavior: smooth;
+}
+
+/* Theme CSS Variables */
+:root {
+  --color-primary: #3B82F6;
+  --color-secondary: #1E40AF;
+  --color-bg: #0F1419;
+  --color-text: #FFFFFF;
+}
+
+/* Custom Scrollbar Styles - Improved */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #0F1419;
+  border-radius: 10px;
+  margin: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #5B6B7D 0%, #4A5A6C 100%);
+  border-radius: 10px;
+  border: 2px solid #0F1419;
+  transition: background 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #6B7B8D 0%, #5A6A7C 100%);
+}
+
+/* Global scrollbar for all scrollable areas */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0F1419;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #5B6B7D 0%, #4A5A6C 100%);
+  border-radius: 10px;
+  border: 2px solid #0F1419;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #6B7B8D 0%, #5A6A7C 100%);
+}
+
+
+
+/* Slide in animation for side panels */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out forwards;
+}
+
+@keyframes bounce-short {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-25%);
+  }
+}
+
+.animate-bounce-short {
+  animation: bounce-short 1s infinite;
+}
