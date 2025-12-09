@@ -3,8 +3,8 @@ services:
     build: .
     container_name: neural-chat-client
     environment:
-      - VIRTUAL_HOST=neural-chat.intelligent.tj
-      - LETSENCRYPT_HOST=neural-chat.intelligent.tj
+      - VIRTUAL_HOST=neural-chat.medlife.tj
+      - LETSENCRYPT_HOST=neural-chat.medlife.tj
       - LETSENCRYPT_EMAIL=saburnorov@gmail.com
     expose:
       - "80"
