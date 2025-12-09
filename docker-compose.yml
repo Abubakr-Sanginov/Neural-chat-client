@@ -1,0 +1,17 @@
+services:
+  neural-chat-client:
+    build: .
+    container_name: neural-chat-client
+    environment:
+      - VIRTUAL_HOST=neural-chat.intelligent.tj
+      - LETSENCRYPT_HOST=neural-chat.intelligent.tj
+      - LETSENCRYPT_EMAIL=saburnorov@gmail.com
+    expose:
+      - "80"
+    restart: unless-stopped
+    networks:
+      - proxy-network
+
+networks:
+  proxy-network:
+    external: true
